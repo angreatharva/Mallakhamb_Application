@@ -5,7 +5,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/api_Endpoints.dart';
+import '../constants/app_Colors.dart';
 import '../data/repository/post_repository.dart';
+import '../data_model/dropDown_model.dart';
 import '../routes/app_routes.dart';
 
 class LoginController extends GetxController with SingleGetTickerProviderMixin {
@@ -29,7 +31,14 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
   late SharedPreferences prefs;
   // var selectedJudge;
   var selectedJudgeType = 'Superior'.obs;
-
+  var selectedGender = 'Boys'.obs;
+  RxList<DropdownList> ageGroupList = <DropdownList>[
+    DropdownList('U12', 'Under 12'),
+    DropdownList('U14', 'Under 14'),
+    DropdownList('U18', 'Under 18'),
+    DropdownList('A18', 'Above 18'),
+  ].obs;
+  var selectedAgeGroup = "".obs;
 
   @override
   void onClose() {
@@ -43,6 +52,7 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
     super.onInit();
     print("PhysicalProgressController init 123");
     box = GetStorage();
+
     // EasyLoading.init();
     EasyLoading.dismiss();
   }
@@ -55,23 +65,24 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
     }
   }
 
-  registerAdmin(userName,password,isSuperior)async {
-    // EasyLoading.dismiss();
+  registerJudge(userName, password, judge, ageGroup, gender) async {
+    EasyLoading.show();
     try {
-      print('auth : ' + userName +"-"+ password);
+      print('auth : ' + userName + "-" + password);
       if (userName.isNotEmpty && password.isNotEmpty) {
-        repository.registerJudge(userName, password,isSuperior).then((data) {
-          print("Register data: ${data}");
+        repository.registerJudge(userName, password, judge, ageGroup, gender).then((data) {
+          print("Register data: $data");
           if (data != null) {
             if (data['status'] != 'Failure') {
               print('Register Success');
-            }
-            else {
-              print("Register Failed");
-              Get.snackbar("Register failed","");
+              Get.snackbar("Login Successful", "${data["username"]} - ${data["judge"]} - ${data["ageGroup"]}",duration: const Duration(seconds: 3),backgroundColor: AppColors.green);
+              EasyLoading.dismiss();
+
             }
           }
           else {
+            print("Register Failed");
+            Get.snackbar("Register failed", "");
             EasyLoading.dismiss();
           }
         });
@@ -85,29 +96,25 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
     }
   }
 
-  void loginUser(userName,password,isSuperior) async{
-    try{
-      if(userName.isNotEmpty && password.isNotEmpty){
-        repository.loginUser(userName, password,isSuperior).then((data) {
-          if(data != null){
-            if(data["status"] != "true"){
+  void loginUser(userName, password, isSuperior) async {
+    try {
+      if (userName.isNotEmpty && password.isNotEmpty) {
+        repository.loginUser(userName, password, isSuperior).then((data) {
+          if (data != null) {
+            if (data["status"] != "true") {
               print("Login Success");
               box.write("Username", data["username"]);
               Get.offNamed(Routes.DASHBOARD);
-            }
-            else{
+            } else {
               print("Login Failed");
               Get.snackbar("Login failed", "Please check Email and Password");
             }
           }
-
         });
       }
-    }
-    catch(e){
+    } catch (e) {
       EasyLoading.dismiss();
       print("exception: " + e.toString());
     }
-
   }
 }

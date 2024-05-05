@@ -6,9 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 //base url of localhost................................
 // const baseUrl = "http://192.168.3.11:9202/api/";
 const baseUrl = "http://192.168.0.104:3000/";
-const registerJudges="registerJudge";
-const login="login";
-
+const registerJudges = "registerJudge";
+const login = "login";
 
 class MyApiClient {
   final http.Client httpClient;
@@ -18,50 +17,56 @@ class MyApiClient {
   GetStorage box = GetStorage();
   late SharedPreferences prefs;
 
-  registerJudge(userName, password, isSuperior)async {
+  registerJudge(userName, password, judge, ageGroup, gender) async {
     try {
       Map<String, String> headers = {
         'Content-type': 'application/json',
         // 'accept': '*/*'
       };
       dynamic mapData = {
-        "username":userName,
-        "password":password,
-        "isSuperior":isSuperior
+        "username": userName,
+        "password": password,
+        "judge": judge,
+        "ageGroup": ageGroup,
+        "gender": gender
       };
       print('login mapData : ' + mapData.toString());
-      var response = await httpClient.post(Uri.parse(baseUrl + registerJudges),
+
+      var response = await httpClient.post(
+        Uri.parse(baseUrl + registerJudges),
         headers: headers,
-        body: jsonEncode(mapData),);
-      print("registerJudge response"+response.body.toString());
+        body: jsonEncode(mapData),
+      );
+      print("registerJudge response" + response.body.toString());
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse;
     } catch (e) {
       print('exception registerJudge : ' + e.toString());
     }
   }
 
   loginUser(userName, password, isSuperior) async {
-      try {
-        Map<String, String> headers = {
-          'Content-type': 'application/json',
-          // 'accept': '*/*'
-        };
-        dynamic mapData = {
-          "username":userName,
-          "password":password,
-          "isSuperior":isSuperior
-        };
-        print('login mapData : ' + mapData.toString());
-        var response = await httpClient.post(Uri.parse(baseUrl + login),
-          headers: headers,
-          body: jsonEncode(mapData),);
-        print("Login response"+response.body.toString());
-        Map<String, dynamic> jsonResponse = json.decode(response.body);
-        return jsonResponse;
-      } catch (e) {
-        print('exception Login : ' + e.toString());
-      }
+    try {
+      Map<String, String> headers = {
+        'Content-type': 'application/json',
+        // 'accept': '*/*'
+      };
+      dynamic mapData = {
+        "username": userName,
+        "password": password,
+        "isSuperior": isSuperior
+      };
+      print('login mapData : ' + mapData.toString());
+      var response = await httpClient.post(
+        Uri.parse(baseUrl + login),
+        headers: headers,
+        body: jsonEncode(mapData),
+      );
+      print("Login response" + response.body.toString());
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse;
+    } catch (e) {
+      print('exception Login : ' + e.toString());
     }
-
-
-
+  }
 }

@@ -7,6 +7,7 @@ import 'package:get/get_state_manager/src/simple/get_view.dart';
 
 import '../../constants/appString.dart';
 import '../../controller/loginController.dart';
+import '../../custom_widgets/custom_drop_down.dart';
 import '../../routes/app_routes.dart';
 
 class Register extends GetView<LoginController> {
@@ -42,7 +43,7 @@ class Register extends GetView<LoginController> {
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
                   child: GestureDetector(
-                    onDoubleTap: (){
+                    onDoubleTap: () {
                       Get.toNamed(Routes.LOGIN);
                     },
                     child: ClipRRect(
@@ -54,35 +55,194 @@ class Register extends GetView<LoginController> {
                     ),
                   ),
                 ),
-                SizedBox(width: Get.width * 0.01,),
+                SizedBox(
+                  width: Get.width * 0.01,
+                ),
                 Container(
                   width: Get.width * 0.6,
-                  child: Text(AppStrings.competionName +" "+ AppStrings.competionYear,
-                    style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,),textAlign: TextAlign.center,),
+                  child: Text(
+                    AppStrings.competionName + " " + AppStrings.competionYear,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: Get.height * 0.1,),
-          TextFormField(
+          SizedBox(height: Get.height * 0.02),
 
-            controller: controller.userNameRegister.value,
+          // Username TextField
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 20.0),
+            child: TextFormField(
+              controller: controller.userNameRegister.value,
+              decoration: InputDecoration(
+                labelText: "Username",
+                contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+            ),
           ),
-          TextFormField(
-            controller: controller.passwordRegister.value,
+          SizedBox(height: Get.height * 0.02),
+
+          // Password TextField
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 20.0),
+            child: TextFormField(
+              controller: controller.passwordRegister.value,
+              decoration: InputDecoration(
+                labelText: "Password",
+                contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+            ),
           ),
+          SizedBox(height: Get.height * 0.02),
+
+          Row(
+            children: [
+              Expanded(
+                child: RadioListTile(
+                  title: Text('Boys'),
+                  value: 'Boys',
+                  groupValue: controller.selectedGender.value,
+                  onChanged: (value) =>
+                      controller.selectedGender.value = value!,
+                ),
+              ),
+              Expanded(
+                child: RadioListTile(
+                  title: Text('Girls'),
+                  value: 'Girls',
+                  groupValue: controller.selectedGender.value,
+                  onChanged: (value) =>
+                      controller.selectedGender.value = value!,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: Get.height * 0.02),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: Get.width * 0.06),
+            child: _ageDropDown(controller),
+          ),
+
+          // Radio buttons for judge types
+          Container(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: RadioListTile(
+                        title: Text('Superior Judge'),
+                        value: 'Superior',
+                        groupValue: controller.selectedJudgeType.value,
+                        onChanged: (value) =>
+                            controller.selectedJudgeType.value = value!,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: RadioListTile(
+                        title: Text('Judge 1'),
+                        value: 'Judge 1',
+                        groupValue: controller.selectedJudgeType.value,
+                        onChanged: (value) =>
+                            controller.selectedJudgeType.value = value!,
+                      ),
+                    ),
+                    Expanded(
+                      child: RadioListTile(
+                        title: Text('Judge 2'),
+                        value: 'Judge 2',
+                        groupValue: controller.selectedJudgeType.value,
+                        onChanged: (value) =>
+                            controller.selectedJudgeType.value = value!,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: RadioListTile(
+                        title: Text('Judge 3'),
+                        value: 'Judge 3',
+                        groupValue: controller.selectedJudgeType.value,
+                        onChanged: (value) =>
+                            controller.selectedJudgeType.value = value!,
+                      ),
+                    ),
+                    Expanded(
+                      child: RadioListTile(
+                        title: Text('Judge 4'),
+                        value: 'Judge 4',
+                        groupValue: controller.selectedJudgeType.value,
+                        onChanged: (value) =>
+                            controller.selectedJudgeType.value = value!,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
           ElevatedButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Color(0xFF004780)),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0))),
+                backgroundColor: MaterialStateProperty.all(AppColors.black),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0))),
               ),
-              onPressed: (){
-            print("userName :${controller.userNameRegister.value.text}");
-            print("password :${controller.passwordRegister.value.text}");
-            controller.registerAdmin(controller.userNameRegister.value.text,controller.passwordRegister.value.text,true);
-          }, child: Text("Register",style: TextStyle(color: AppColors.white),))
+              onPressed: () {
+                print("userName :${controller.userNameRegister.value.text}");
+                print("password :${controller.passwordRegister.value.text}");
+                controller.registerJudge(
+                    controller.userNameRegister.value.text,
+                    controller.passwordRegister.value.text,
+                    controller.selectedJudgeType.value,
+                    controller.selectedAgeGroup.value,
+                    controller.selectedGender.value);
+              },
+              child: Text(
+                "Register",
+                style: TextStyle(color: AppColors.white),
+              ))
         ],
       );
+    });
+  }
+
+  Widget _ageDropDown(controller) {
+    return Builder(builder: (context) {
+      return Obx(() => CustomDropDown(
+            dropdownList: controller.ageGroupList.value,
+            value: controller.selectedAgeGroup.value != ''
+                ? controller.selectedAgeGroup.value
+                : null,
+            selectedData: (value) async {
+              if (value == '0') {
+                print('SelectAge : $value');
+                controller.selectedAgeGroup.value = '';
+              } else {
+                controller.selectedAgeGroup.value = value;
+              }
+            },
+          ));
     });
   }
 }
