@@ -21,7 +21,7 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
   GetStorage box = GetStorage();
   Rx<TextEditingController> userNameLogin = TextEditingController().obs;
   Rx<TextEditingController> passwordLogin = TextEditingController().obs;
-  Rx<TextEditingController> userNameRegister = TextEditingController().obs;
+  Rx<TextEditingController> judgeNameRegister = TextEditingController().obs;
   Rx<TextEditingController> passwordRegister = TextEditingController().obs;
   var url = ''.obs;
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -65,24 +65,31 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
     }
   }
 
-  registerJudge(userName, password, judge, ageGroup, gender) async {
+  registerJudge(judgeName, password, judge, ageGroup, gender) async {
     EasyLoading.show();
     try {
-      print('auth : ' + userName + "-" + password);
-      if (userName.isNotEmpty && password.isNotEmpty) {
-        repository.registerJudge(userName, password, judge, ageGroup, gender).then((data) {
+      print('auth : ' + judgeName + "-" + password);
+      Map<String, dynamic> mapData = {
+        "judgeName": judgeName,
+        "password": password,
+        "judge": judge,
+        "ageGroup": ageGroup,
+        "gender": gender
+      };
+      if (judgeName.isNotEmpty && password.isNotEmpty) {
+        repository.registerJudge(mapData).then((data) {
           print("Register data: $data");
           if (data != null) {
             if (data['status'] != 'Failure') {
               print('Register Success');
-              Get.snackbar("Login Successful", "${data["username"]} - ${data["judge"]} - ${data["ageGroup"]}",duration: const Duration(seconds: 3),backgroundColor: AppColors.green);
+              Get.snackbar("Login Successful", "${data["judgeName"]} - ${data["judge"]} - ${data["ageGroup"]}",duration: const Duration(seconds: 3),backgroundColor: AppColors.green);
               EasyLoading.dismiss();
 
             }
           }
           else {
             print("Register Failed");
-            Get.snackbar("Register failed", "");
+            Get.snackbar("Register failed", "",backgroundColor: Colors.red);
             EasyLoading.dismiss();
           }
         });

@@ -2,9 +2,11 @@ class APIEndpoints {
   APIEndpoints();
 
   String get baseURL {
-    return "http://192.168.3.11:9202/api/";
+    // return "http://localhost:9000/";
+    return "http://192.168.0.104:3000/";
   }
-  String get getCardScanKeyword{
-    return "GetCardScanKeyword";
+
+  String get registerJudge{
+    return "registerJudge";
   }
 }

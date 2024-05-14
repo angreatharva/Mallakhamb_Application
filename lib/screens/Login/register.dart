@@ -78,9 +78,9 @@ class Register extends GetView<LoginController> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 20.0),
             child: TextFormField(
-              controller: controller.userNameRegister.value,
+              controller: controller.judgeNameRegister.value,
               decoration: InputDecoration(
-                labelText: "Username",
+                labelText: "Enter Judge Name",
                 contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.green),
@@ -209,10 +209,10 @@ class Register extends GetView<LoginController> {
                     borderRadius: BorderRadius.circular(10.0))),
               ),
               onPressed: () {
-                print("userName :${controller.userNameRegister.value.text}");
+                print("judgeName :${controller.judgeNameRegister.value.text}");
                 print("password :${controller.passwordRegister.value.text}");
                 controller.registerJudge(
-                    controller.userNameRegister.value.text,
+                    controller.judgeNameRegister.value.text,
                     controller.passwordRegister.value.text,
                     controller.selectedJudgeType.value,
                     controller.selectedAgeGroup.value,
