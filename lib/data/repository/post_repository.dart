@@ -9,8 +9,12 @@ class MyRepository {
     return apiClient.registerJudge(mapData);
   }
 
-  loginUser(userName, password, isSuperior) {
-    // return apiClient.loginUser(userName, password,isSuperior);
+  loginUser(userName, password) {
+    return apiClient.loginUser(userName, password);
+  }
+
+  getTeamList(ageGroup) {
+    return apiClient.getTeamList(ageGroup);
   }
 
 }

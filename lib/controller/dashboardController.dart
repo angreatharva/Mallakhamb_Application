@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/api_Endpoints.dart';
 import '../data/repository/post_repository.dart';
+import '../data_model/teamsListModel.dart';
 import '../routes/app_routes.dart';
 
 class DashboardController extends GetxController with SingleGetTickerProviderMixin {
@@ -19,11 +20,12 @@ class DashboardController extends GetxController with SingleGetTickerProviderMix
   late SharedPreferences prefs;
   GetStorage box = GetStorage();
 
-
+  RxList<TeamsListModel> teamList = <TeamsListModel>[].obs;
+  Rx<TextEditingController> searchTeamsEditingController = TextEditingController().obs;
+  ScrollController scrollController = new ScrollController();
 
   @override
   void onClose() {
-    // flutterWebViewPlugin.dispose();
     super.onClose();
     EasyLoading.dismiss();
   }
@@ -31,10 +33,10 @@ class DashboardController extends GetxController with SingleGetTickerProviderMix
   @override
   void onInit() {
     super.onInit();
-    print("PhysicalProgressController init 123");
+    print("DashboardController init");
     box = GetStorage();
-    // EasyLoading.init();
     EasyLoading.dismiss();
+    getTeamList(); // Move getTeamList call here
   }
 
   @override
@@ -45,5 +47,23 @@ class DashboardController extends GetxController with SingleGetTickerProviderMix
     }
   }
 
+  getTeamList() async {
+    print(box.read("ageGroup"));
+    var ageGroup = box.read("ageGroup");
+    EasyLoading.show();
+    try {
+      var data = await repository.getTeamList(ageGroup);
+      print("getTeamList data: $data");
+      if (data != null && data is List<dynamic>) {
+        teamList.value = data.map((item) => TeamsListModel.fromJson(item)).toList();
+      } else {
 
+        print("Invalid API response format");
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      print("exception getTeamListController : " + e.toString());
+    }
+    EasyLoading.dismiss();
+  }
 }

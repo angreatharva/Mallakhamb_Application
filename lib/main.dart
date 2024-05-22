@@ -1,6 +1,7 @@
 import 'package:bhausaheb2k24/routes/app_pages.dart';
 import 'package:bhausaheb2k24/routes/app_routes.dart';
 import 'package:bhausaheb2k24/screens/Login/login.dart';
+import 'package:bhausaheb2k24/translation/app_Translation.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
@@ -21,9 +22,11 @@ void main() {
     builder: EasyLoading.init(), // Initialize EasyLoading builder
     home: SplashScreen(), // Set the home to your splash screen
     locale: Get.deviceLocale,
-    fallbackLocale: Locale('en', 'US'),
+    fallbackLocale:  Locale('en', 'US'),
+    translationsKeys: AppTranslation.translations,
   ));
 }
+
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -34,11 +37,12 @@ class _SplashScreenState extends State<SplashScreen> {
   bool _imagePrecached = false;
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
+  double _initialSize = 100.0; // Initial size of the logo
+  double _targetSize = 200.0; // Target size of the logo
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Preload the image if it hasn't been precached yet
     if (!_imagePrecached) {
       precacheImage(AssetImage("assets/images/bhausahebLogo.jpg"), context);
       _imagePrecached = true;
@@ -48,8 +52,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // After 2 seconds, navigate to the login screen
-    Future.delayed(Duration(milliseconds: 800), () {
+    // Start the animation after a short delay
+    Future.delayed(Duration(milliseconds: 100), () {
+      setState(() {
+        _initialSize = 200.0; // Change the initial size to start small
+      });
+    });
+    // Navigate to the login screen after a longer delay
+    Future.delayed(Duration(milliseconds: 1800), () {
       Get.offNamed(Routes.LOGIN, arguments: _navigatorKey);
     });
   }
@@ -59,16 +69,19 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-        child: Hero(
-          tag: 'logo',
-          child: Image.asset(
-            "assets/images/bhausahebLogo.jpg",
-            fit: BoxFit.fitWidth,
-            width: double.infinity,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 500),
+          width: _initialSize,
+          height: _initialSize,
+          child: Hero(
+            tag: 'logo',
+            child: Image.asset(
+              "assets/images/bhausahebLogo.jpg",
+              fit: BoxFit.contain,
+            ),
           ),
         ),
       ),
     );
   }
 }
-

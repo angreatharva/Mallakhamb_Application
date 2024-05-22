@@ -32,6 +32,7 @@ class MyApiClient {
         Uri.parse(baseUrl + AppStrings.apiEndpoints.registerJudge),
         headers: headers,
         body: jsonEncode(mapData),
+
       );
       print("registerJudge response" + response.body.toString());
       Map<String, dynamic> jsonResponse = json.decode(response.body);
@@ -40,5 +41,54 @@ class MyApiClient {
       print('exception registerJudge : ' + e.toString());
     }
   }
+
+  loginUser(userName, password) async {
+
+    dynamic mapData = {
+      "judgeName": userName,
+      "password": password
+    };
+
+    try {
+      Map<String, String> headers = {
+        'Content-type': 'application/json',
+        // 'accept': '*/*'
+      };
+      print('login mapData : ' + mapData.toString());
+
+      var response = await httpClient.post(
+        Uri.parse(baseUrl + AppStrings.apiEndpoints.login),
+        headers: headers,
+        body: jsonEncode(mapData),
+      );
+      print("loginUser response" + response.body.toString());
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse;
+    } catch (e) {
+      print('exception loginUser : ' + e.toString());
+    }
+  }
+
+  getTeamList(ageGroup) async {
+    try {
+      String url = "${baseUrl + AppStrings.apiEndpoints.getTeamList}?ageGroup=$ageGroup";
+      print("getTeamList URL: $url");
+      Map<String, String> headers = {
+        'Content-type': 'application/json',
+        // 'accept': '*/*'
+      };
+      ApiClient apiClient = ApiClient.defaultClient();
+      var response = await httpClient.get(
+        Uri.parse(url),
+        headers: headers,
+      );
+      print("getTeamList response" + response.body.toString());
+      dynamic jsonResponse = json.decode(response.body);
+      return jsonResponse;
+    } catch (e) {
+      print('exception getTeamList : ' + e.toString());
+    }
+  }
+
 
 }

@@ -33,10 +33,12 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
   var selectedJudgeType = 'Superior'.obs;
   var selectedGender = 'Boys'.obs;
   RxList<DropdownList> ageGroupList = <DropdownList>[
-    DropdownList('U12', 'Under 12'),
-    DropdownList('U14', 'Under 14'),
-    DropdownList('U18', 'Under 18'),
-    DropdownList('A18', 'Above 18'),
+    DropdownList('under12', 'Under 12'),
+    DropdownList('under14', 'Under 14'),
+    DropdownList('under16', 'Under 16'),
+    DropdownList('under18', 'Under 18'),
+    DropdownList('above16', 'Above 16'),
+    DropdownList('above18', 'Above 18'),
   ].obs;
   var selectedAgeGroup = "".obs;
 
@@ -82,7 +84,13 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
           if (data != null) {
             if (data['status'] != 'Failure') {
               print('Register Success');
-              Get.snackbar("Login Successful", "${data["judgeName"]} - ${data["judge"]} - ${data["ageGroup"]}",duration: const Duration(seconds: 3),backgroundColor: AppColors.green);
+              Get.snackbar("Login Successful",
+                  "${data["judgeName"]} - ${data["judge"]} - ${data["ageGroup"]}",
+                  duration: const Duration(seconds: 3),
+                  backgroundColor: AppColors.green);
+              judgeNameRegister.value.clear();
+              passwordRegister.value.clear();
+              selectedAgeGroup.value = "";
               EasyLoading.dismiss();
 
             }
@@ -103,14 +111,15 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
     }
   }
 
-  void loginUser(userName, password, isSuperior) async {
+  void loginUser(userName, password) async {
     try {
       if (userName.isNotEmpty && password.isNotEmpty) {
-        repository.loginUser(userName, password, isSuperior).then((data) {
+        repository.loginUser(userName, password).then((data) {
           if (data != null) {
-            if (data["status"] != "true") {
+            if (data["message"] == "Login successful") {
               print("Login Success");
-              box.write("Username", data["username"]);
+              box.write("Username", data["judgeDetails"]["judgeName"]);
+              box.write("ageGroup", data["judgeDetails"]["ageGroup"]);
               Get.offNamed(Routes.DASHBOARD);
             } else {
               print("Login Failed");

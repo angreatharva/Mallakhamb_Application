@@ -9,4 +9,10 @@ class APIEndpoints {
   String get registerJudge{
     return "registerJudge";
   }
+  String get login{
+    return "login";
+  }
+  String get getTeamList{
+    return "getTeamList";
+  }
 }
