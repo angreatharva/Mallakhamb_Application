@@ -15,4 +15,7 @@ class APIEndpoints {
   String get getTeamList{
     return "getTeamList";
   }
+  String get playersData{
+    return "playersData";
+  }
 }

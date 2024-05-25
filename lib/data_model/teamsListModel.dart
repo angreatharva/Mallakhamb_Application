@@ -5,20 +5,21 @@ class TeamsListModel {
   String? contactNo;
   String? emailAddress;
   String? gender;
-  String? ageGroup;
+  String? players;
   int? totalMarks;
   int? avgMarks;
 
-  TeamsListModel(
-      {this.teamId,
-        this.teamName,
-        this.coachName,
-        this.contactNo,
-        this.emailAddress,
-        this.gender,
-        this.ageGroup,
-        this.totalMarks,
-        this.avgMarks});
+  TeamsListModel({
+    this.teamId,
+    this.teamName,
+    this.coachName,
+    this.contactNo,
+    this.emailAddress,
+    this.gender,
+    this.players,
+    this.totalMarks,
+    this.avgMarks,
+  });
 
   TeamsListModel.fromJson(Map<String, dynamic> json) {
     teamId = json['teamId'];
@@ -27,22 +28,22 @@ class TeamsListModel {
     contactNo = json['contactNo'];
     emailAddress = json['emailAddress'];
     gender = json['gender'];
-    ageGroup = json['ageGroup'];
+    players = json['players'];
     totalMarks = json['totalMarks'];
     avgMarks = json['avgMarks'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['teamId'] = this.teamId;
-    data['teamName'] = this.teamName;
-    data['coachName'] = this.coachName;
-    data['contactNo'] = this.contactNo;
-    data['emailAddress'] = this.emailAddress;
-    data['gender'] = this.gender;
-    data['ageGroup'] = this.ageGroup;
-    data['totalMarks'] = this.totalMarks;
-    data['avgMarks'] = this.avgMarks;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['teamId'] = teamId;
+    data['teamName'] = teamName;
+    data['coachName'] = coachName;
+    data['contactNo'] = contactNo;
+    data['emailAddress'] = emailAddress;
+    data['gender'] = gender;
+    data['players'] = players;
+    data['totalMarks'] = totalMarks;
+    data['avgMarks'] = avgMarks;
     return data;
   }
 }

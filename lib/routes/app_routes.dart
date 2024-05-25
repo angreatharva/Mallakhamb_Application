@@ -5,5 +5,6 @@ abstract class Routes {
   static const LOGIN = '/login';
   static const REGISTER = '/Register';
   static const DASHBOARD = '/Dashboard';
+  static const TEAMPLAYERLIST = '/TeamPlayerList';
 
 }

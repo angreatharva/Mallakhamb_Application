@@ -1,9 +1,11 @@
 import 'package:bhausaheb2k24/screens/Dashboard/dashboard.dart';
+import 'package:bhausaheb2k24/screens/TeamPlayerList/teamPlayerList.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../bindings/dashboardBindings.dart';
 import '../bindings/loginBinding.dart';
+import '../bindings/teamPlayerListBindings.dart';
 import '../screens/Login/login.dart';
 import '../screens/Login/register.dart';
 import '../screens/Login/splash.dart';
@@ -27,8 +29,13 @@ class AppPages {
     ),
     GetPage(
       name: Routes.DASHBOARD,
-      page: () => Dashboard(),
+      page: () => const Dashboard(),
       binding: DashboardBinding(),
+    ),
+    GetPage(
+      name: Routes.TEAMPLAYERLIST,
+      page: () => const TeamPlayerList(),
+      binding: TeamPlayerListBinding(),
     ),
 
   ];

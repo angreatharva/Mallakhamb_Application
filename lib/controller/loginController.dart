@@ -52,7 +52,7 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
   @override
   void onInit() {
     super.onInit();
-    print("PhysicalProgressController init 123");
+    print("LoginController init");
     box = GetStorage();
 
     // EasyLoading.init();

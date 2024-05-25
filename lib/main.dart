@@ -24,6 +24,9 @@ void main() {
     locale: Get.deviceLocale,
     fallbackLocale:  Locale('en', 'US'),
     translationsKeys: AppTranslation.translations,
+    theme: ThemeData(
+      fontFamily: 'SedanSC-Regular'
+    ),
   ));
 }
 

@@ -5,6 +5,7 @@ import 'package:get/get_state_manager/src/simple/get_view.dart';
 
 import '../../constants/app_Colors.dart';
 import '../../controller/loginController.dart';
+import '../../routes/app_routes.dart';
 
 class Dashboard extends GetView<DashboardController> {
   const Dashboard({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class Dashboard extends GetView<DashboardController> {
   Widget build(BuildContext context) {
     return GetX<DashboardController>(initState: (state) {
       print("Dashboard page");
-      controller.getTeamList(); // No await here
+      controller.getTeamList();
     }, builder: (context) {
       return Scaffold(
         appBar: AppBar(
@@ -26,7 +27,7 @@ class Dashboard extends GetView<DashboardController> {
         ),
         body: Container(
             height: Get.height * 0.894,
-          child: _main(controller.teamList.value),
+          child: _main(controller.teamListTemp.value),
         ),
       );
     });
@@ -37,14 +38,13 @@ class Dashboard extends GetView<DashboardController> {
         _search(controller, data),
         Align(
           alignment: Alignment.center,
-          child: controller.teamList.isNotEmpty == true
+          child: controller.teamListTemp.isNotEmpty == true
               ? _cardList(controller, data)
               : Center(
             child: Container(
               color: Colors.white,
               child: Text(
                 "Data_not_found".tr,
-                style: TextStyle(fontFamily: 'Arial'),
               ),
             ),
           ),
@@ -61,39 +61,43 @@ class Dashboard extends GetView<DashboardController> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: Stack(children: [
-        TextFormField(
+      child: Obx(()=>
+         TextFormField(
           controller: controller.searchTeamsEditingController.value,
           decoration: InputDecoration(
-            suffixIcon: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                controller.searchTeamsEditingController.value.text.isNotEmpty
-                    ? GestureDetector(
-                  onTap: () {
-                    controller.searchTeamsEditingController.value.text = '';
-                  },
-                  child: Icon(Icons.cancel, color: AppColors.grey),
-                )
-                    : GestureDetector(
-                  onTap: () {},
-                  child: Icon(Icons.search, color: AppColors.grey),
-                ),
-
-              ],
+            suffixIcon: controller.searchTeamsEditingController.value.text.length >   0 ?
+            GestureDetector(
+              onTap: () {
+                controller.searchTeamsEditingController.value.text = '';
+                controller.getTeamList();
+              },
+              child: Icon(Icons.cancel, color: AppColors.grey),
+            )
+                : GestureDetector(
+              onTap: () {
+                controller.searchTeamList(controller.searchTeamsEditingController.value.text);
+              },
+              child: Icon(Icons.search, color: AppColors.grey),
             ),
             hintText: 'Search'.tr,
-            hintStyle: TextStyle(color: Colors.grey, fontFamily: 'Arial'),
+            hintStyle: TextStyle(color: Colors.grey),
             contentPadding: EdgeInsets.symmetric(vertical: Get.height * 0.008, horizontal: Get.width * 0.03),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
             ),
           ),
-          onChanged: (value) {},
+          onChanged: (value) {
+            if(value.length > 0){
+              controller.searchTeamList(value);
+            }
+            else{
+              controller.getTeamList();
+            }
+          },
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.done,
         ),
-      ]),
+      ),
     );
   }
 
@@ -113,40 +117,46 @@ class Dashboard extends GetView<DashboardController> {
     );
   }
 
-
-
-
   _unitCard(controller, index, data) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(color:Colors.grey),
-      ),
-      margin: EdgeInsets.only(bottom: Get.height * 0.005,left: Get.width * 0.02,right: Get.width * 0.02),
-      padding: EdgeInsets.only(left: Get.width * 0.02,right: Get.width * 0.02,top:Get.height * 0.008,bottom: Get.height * 0.008),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
+    return GestureDetector(
+      onTap: (){
+        controller.box.write("teamId",data.teamId);
+        controller.box.write("ageGroup",controller.box.read("ageGroup"));
+        controller.box.write("gender",data.gender);
+        controller.box.write("teamName",data.teamName);
+        Get.toNamed(Routes.TEAMPLAYERLIST);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(color:Colors.grey),
+        ),
+        margin: EdgeInsets.only(bottom: Get.height * 0.005,left: Get.width * 0.02,right: Get.width * 0.02),
+        padding: EdgeInsets.only(left: Get.width * 0.02,right: Get.width * 0.02,top:Get.height * 0.008,bottom: Get.height * 0.008),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                child: Text(
+                  data.teamName,
+                  style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,),
+                ),
+            ),
+            Container(
               child: Text(
-                data.teamName,
-                style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,fontFamily: 'Arial'),
+                data.coachName + " (" + "Coach".tr + ")",
+                style: TextStyle(fontSize: 15,),
               ),
-          ),
-          Container(
-            child: Text(
-              data.coachName + " (" + "Coach".tr + ")",
-              style: TextStyle(fontSize: 15,fontFamily: 'Arial'),
             ),
-          ),
-          
-          Container(
-            child: Text(
-              "Total Marks".tr+" : "+data.totalMarks.toString(),
-              style: TextStyle(fontSize: 15,fontFamily: 'Arial'),
+
+            Container(
+              child: Text(
+                "Total Marks".tr+" : "+data.totalMarks.toString(),
+                style: TextStyle(fontSize: 15,),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

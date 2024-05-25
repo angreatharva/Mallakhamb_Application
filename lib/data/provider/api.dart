@@ -90,5 +90,26 @@ class MyApiClient {
     }
   }
 
+  getTeamPlayerList(teamId, ageGroup, gender) async {
+    try {
+      String url = "${baseUrl + AppStrings.apiEndpoints.playersData}?teamId=$teamId&ageGroup=$ageGroup&gender=$gender";
+      print("getTeamPlayerList URL: $url");
+      Map<String, String> headers = {
+        'Content-type': 'application/json',
+        // 'accept': '*/*'
+      };
+      ApiClient apiClient = ApiClient.defaultClient();
+      var response = await httpClient.get(
+        Uri.parse(url),
+        headers: headers,
+      );
+      print("getTeamList response" + response.body.toString());
+      dynamic jsonResponse = json.decode(response.body);
+      return jsonResponse;
+    } catch (e) {
+      print('exception getTeamList : ' + e.toString());
+    }
+  }
+
 
 }

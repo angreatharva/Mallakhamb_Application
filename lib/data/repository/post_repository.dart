@@ -17,4 +17,8 @@ class MyRepository {
     return apiClient.getTeamList(ageGroup);
   }
 
+  getTeamPlayerList(teamId, ageGroup, gender) {
+    return apiClient.getTeamPlayerList(teamId, ageGroup, gender);
+  }
+
 }
