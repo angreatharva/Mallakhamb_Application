@@ -70,18 +70,31 @@ class DashboardController extends GetxController with SingleGetTickerProviderMix
     try {
       var data = await repository.getTeamList(ageGroup);
       print("getTeamList data: $data");
-      if (data != null && data is List<dynamic>) {
-        teamListMain.value = data.map((item) => TeamsListModel.fromJson(item)).toList();
-        teamListTemp.value = data.map((item) => TeamsListModel.fromJson(item)).toList();
-      } else {
 
+      if (data != null && data is List) {
+        // Clear the lists before adding new data
+        teamListMain.clear();
+        teamListTemp.clear();
+
+        // Convert each map to TeamsListModel and add to the lists
+        for (var item in data) {
+          if (item is Map<String, dynamic>) {
+            var team = TeamsListModel.fromJson(item);
+            teamListMain.add(team);
+            teamListTemp.add(team);
+
+          } else {
+            print("Invalid item format in API response");
+          }
+        }
+      } else {
         print("Invalid API response format");
       }
     } catch (e) {
-      EasyLoading.dismiss();
       print("exception getTeamListController : " + e.toString());
+    } finally {
+      EasyLoading.dismiss();
     }
-    EasyLoading.dismiss();
   }
 
   searchTeamList(String searchQuery) {

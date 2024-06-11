@@ -6,9 +6,8 @@ import '../../constants/appString.dart';
 import '../../network/api_Client.dart';
 import '../../network/request_options_builder.dart';
 
-const baseUrl = "http://192.168.0.104:3000/";
-//for uat...............................................
-// const baseUrl = "https://beta-reconnect-mobileapi.colliersasia.com/api/";
+const baseUrl = "http://192.168.0.105:3000/";
+
 
 const loginUser = 'token';
 

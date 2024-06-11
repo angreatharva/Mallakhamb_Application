@@ -24,14 +24,22 @@ class Dashboard extends GetView<DashboardController> {
             "Welcome, ${controller.box.read("Username")}",
             style: TextStyle(color: AppColors.black),
           ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Get.toNamed(Routes.LOGIN);
+                },
+                icon: Icon(Icons.power_settings_new_sharp))
+          ],
         ),
         body: Container(
-            height: Get.height * 0.894,
+          height: Get.height * 0.894,
           child: _main(controller.teamListTemp.value),
         ),
       );
     });
   }
+
   _main(data) {
     return Stack(
       children: [
@@ -57,16 +65,18 @@ class Dashboard extends GetView<DashboardController> {
   _search(controller, data) {
     return Container(
       height: Get.height * 0.045,
-      margin: EdgeInsets.symmetric(vertical: Get.height * 0.012, horizontal: Get.width * 0.02),
+      margin: EdgeInsets.symmetric(
+          vertical: Get.height * 0.012, horizontal: Get.width * 0.02),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: Obx(()=>
-         TextFormField(
+      child: Obx(
+            () => TextFormField(
           controller: controller.searchTeamsEditingController.value,
           decoration: InputDecoration(
-            suffixIcon: controller.searchTeamsEditingController.value.text.length >   0 ?
-            GestureDetector(
+            suffixIcon: controller.searchTeamsEditingController.value.text.length >
+                0
+                ? GestureDetector(
               onTap: () {
                 controller.searchTeamsEditingController.value.text = '';
                 controller.getTeamList();
@@ -75,22 +85,23 @@ class Dashboard extends GetView<DashboardController> {
             )
                 : GestureDetector(
               onTap: () {
-                controller.searchTeamList(controller.searchTeamsEditingController.value.text);
+                controller.searchTeamList(
+                    controller.searchTeamsEditingController.value.text);
               },
               child: Icon(Icons.search, color: AppColors.grey),
             ),
             hintText: 'Search'.tr,
             hintStyle: TextStyle(color: Colors.grey),
-            contentPadding: EdgeInsets.symmetric(vertical: Get.height * 0.008, horizontal: Get.width * 0.03),
+            contentPadding: EdgeInsets.symmetric(
+                vertical: Get.height * 0.008, horizontal: Get.width * 0.03),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
             ),
           ),
           onChanged: (value) {
-            if(value.length > 0){
+            if (value.length > 0) {
               controller.searchTeamList(value);
-            }
-            else{
+            } else {
               controller.getTeamList();
             }
           },
@@ -118,47 +129,52 @@ class Dashboard extends GetView<DashboardController> {
   }
 
   _unitCard(controller, index, data) {
+    final team = controller.teamListTemp[index];
     return GestureDetector(
-      onTap: (){
-        controller.box.write("teamId",data.teamId);
-        controller.box.write("ageGroup",controller.box.read("ageGroup"));
-        controller.box.write("gender",data.gender);
-        controller.box.write("teamName",data.teamName);
+      onTap: () {
+        controller.box.write("teamId", data.teamId);
+        controller.box.write("ageGroup", controller.box.read("ageGroup"));
+        controller.box.write("gender", data.gender);
+        controller.box.write("teamName", data.teamName);
         Get.toNamed(Routes.TEAMPLAYERLIST);
       },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(color:Colors.grey),
-        ),
-        margin: EdgeInsets.only(bottom: Get.height * 0.005,left: Get.width * 0.02,right: Get.width * 0.02),
-        padding: EdgeInsets.only(left: Get.width * 0.02,right: Get.width * 0.02,top:Get.height * 0.008,bottom: Get.height * 0.008),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: Colors.grey),
+          ),
+          padding: EdgeInsets.only(
+              left: Get.width * 0.02,
+              right: Get.width * 0.02,
+              top: Get.height * 0.008,
+              bottom: Get.height * 0.008),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
                 child: Text(
                   data.teamName,
-                  style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
-            ),
-            Container(
-              child: Text(
-                data.coachName + " (" + "Coach".tr + ")",
-                style: TextStyle(fontSize: 15,),
               ),
-            ),
+              Container(
+                child: Text(
+                  data.coachName + " (" + "Coach".tr + ")",
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+              ),
 
-            Container(
-              child: Text(
-                "Total Marks".tr+" : "+data.totalMarks.toString(),
-                style: TextStyle(fontSize: 15,),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
