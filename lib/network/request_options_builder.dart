@@ -15,8 +15,8 @@ class AppRequestOptionsBuilder extends RequestOptionsBuilder {
   Future<AppRequestOptionsBuilder> defaultHeader() async {
     _options.headers = {
       // "Content-Type": "application/x-www-form-urlencoded",
-      "Content-Type": "application/json",
-      "Accept" : "*/*",
+      'Content-type': 'application/json',
+      // "Accept" : "*/*",
     };
     return this;
   }

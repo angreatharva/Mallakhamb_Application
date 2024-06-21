@@ -66,9 +66,12 @@ class DashboardController extends GetxController with SingleGetTickerProviderMix
   getTeamList() async {
     print(box.read("ageGroup"));
     var ageGroup = box.read("ageGroup");
+    Map<String, dynamic> query = {
+      "ageGroup": box.read("ageGroup"),
+    };
     EasyLoading.show();
     try {
-      var data = await repository.getTeamList(ageGroup);
+      var data = await repository.getTeamList(query);
       print("getTeamList data: $data");
 
       if (data != null && data is List) {

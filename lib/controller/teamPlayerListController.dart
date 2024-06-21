@@ -23,6 +23,8 @@ class TeamPlayerListController extends GetxController with SingleGetTickerProvid
   ScrollController scrollController = new ScrollController();
 
   RxList<TeamPlayerList> teamPlayerList = <TeamPlayerList>[].obs;
+  // var teamPlayerList = <TeamPlayerList>[].obs;
+
 
   @override
   void onClose() {
@@ -48,25 +50,41 @@ class TeamPlayerListController extends GetxController with SingleGetTickerProvid
     }
   }
   getTeamPlayerList() async {
+
+
     print("teamId: ${box.read("teamId")}");
     print("ageGroup: ${box.read("ageGroup")}");
     print("gender: ${box.read("gender")}");
-    var teamId = box.read("teamId");
-    var ageGroup = box.read("ageGroup");
-    var gender = box.read("gender");
+    Map<String, dynamic> query = {
+      "teamId": box.read("teamId"),
+      "ageGroup": box.read("ageGroup"),
+      "gender": box.read("gender"),
+    };
     EasyLoading.show();
     try {
-      var data = await repository.getTeamPlayerList(teamId, ageGroup, gender);
+      var data = await repository.getTeamPlayerList(query);
       print("getTeamPlayerList data: $data");
+
       if (data != null && data is List) {
-        teamPlayerList.value = data.map((player) => TeamPlayerList.fromJson(player)).toList();
+        // Clear the existing list
+        teamPlayerList.value.clear();
+
+        // Add new items
+        for (var player in data) {
+          teamPlayerList.value.add(TeamPlayerList.fromJson(player));
+        }
+
+        // Alternatively, you can use the below line to replace the entire list
+        // teamPlayerList.value = data.map((player) => TeamPlayerList.fromJson(player)).toList();
       } else {
         print("Invalid API response format");
       }
+      teamPlayerList.refresh();
     } catch (e) {
       print("exception getTeamListController : " + e.toString());
     } finally {
       EasyLoading.dismiss();
     }
   }
+
 }

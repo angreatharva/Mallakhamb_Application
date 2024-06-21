@@ -79,7 +79,8 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
         "gender": gender
       };
       if (judgeName.isNotEmpty && password.isNotEmpty) {
-        repository.registerJudge(mapData).then((data) {
+        var data = await repository.registerJudge(mapData);
+            // .then((data) {ATH
           print("Register data: $data");
           if (data != null) {
             if (data['status'] != 'Failure') {
@@ -97,10 +98,10 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
           }
           else {
             print("Register Failed");
-            Get.snackbar("Register failed", "",backgroundColor: Colors.red);
+
             EasyLoading.dismiss();
           }
-        });
+        // });
       } else {
         Get.snackbar(
             "Email or Password not Entered", "Please Enter Email and Password");
@@ -123,7 +124,7 @@ class LoginController extends GetxController with SingleGetTickerProviderMixin {
               Get.offNamed(Routes.DASHBOARD);
             } else {
               print("Login Failed");
-              Get.snackbar("Login failed", "Please check Email and Password");
+              // Get.snackbar("Login failed", "Please check Email and Password");
             }
           }
         });
